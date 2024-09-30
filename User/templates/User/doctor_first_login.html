@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Profile - Doctor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .btn {
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #333333;
+            color: white;
+        }
+
+        #profileUpdateForm {
+            display: none; /* Initially hidden */
+        }
+
+        /* Style for the search filter */
+        .search-dropdown {
+            position: relative;
+        }
+
+        .search-results {
+            position: absolute;
+            z-index: 1000;
+            background-color: white;
+            border: 1px solid #ddd;
+            width: 100%;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none; /* Initially hidden */
+        }
+
+        .search-results div {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .search-results div:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+
+    <div class="w-full max-w-md bg-white p-8 shadow-lg rounded-md">
+        <!-- Profile Update Form for Doctors -->
+        <form id="complete_profile_doctor" method="POST" action="/user/complete_profile_doctor/">
+        {% csrf_token %}
+
+        <div id="profileUpdateForm" class="space-y-6">
+            <h2 class="text-xl font-semibold text-gray-700">Complete Your Profile</h2>
+
+            <div>
+                <label for="specialization" class="block text-gray-700">Specialization</label>
+                <input name="specialization" type="text" id="specialization" class="w-full border border-gray-300 p-2 rounded-md focus:ring focus:ring-gray-500 focus:border-gray-500" placeholder="Enter specialization" required>
+            </div>
+
+            <div>
+                <label for="licenseNumber" class="block text-gray-700">License Number</label>
+                <input name="licenseNumber" type="text" id="licenseNumber" class="w-full border border-gray-300 p-2 rounded-md focus:ring focus:ring-gray-500 focus:border-gray-500" placeholder="Enter license number" required>
+            </div>
+
+            <div class="search-dropdown">
+                <label for="hospitalName" class="block text-gray-700">Hospital Name</label>
+                <input id="hospitalSearch" name="hospitalName" type="text" id="hospitalSearch" class="w-full border border-gray-300 p-2 rounded-md focus:ring focus:ring-gray-500 focus:border-gray-500" placeholder="Search hospital name">
+                
+                <input type="hidden" name="hospitalId" id="hospitalId">
+                
+                <div id="hospitalResults" class="search-results"></div>
+            </div>
+
+            <button type="submit" class="btn w-full bg-gray-800 text-white py-2 rounded-md hover:bg-gray-900">Update Profile</button>
+        </div>
+        </form>
+    </div>
+
+    <script>
+        // Simulate first login detection (Replace this with actual backend logic)
+        const isFirstLogin = true; // Example flag. Replace with session flag, API call, etc.
+    
+        // Show the profile update form if it's the first login
+        if (isFirstLogin) {
+            document.getElementById('profileUpdateForm').style.display = 'block';
+        }
+    
+        // Hospitals data (name and id) passed from the backend
+        const hospitals = {{ hospitals_json|safe }};
+    
+        // Search functionality for hospitals
+        const hospitalSearchInput = document.getElementById('hospitalSearch');
+        const hospitalResultsDiv = document.getElementById('hospitalResults');
+        const hospitalIdInput = document.getElementById('hospitalId'); // Hidden field to store the hospital ID
+    
+        hospitalSearchInput.addEventListener('input', function() {
+            const searchValue = hospitalSearchInput.value.toLowerCase();
+            hospitalResultsDiv.innerHTML = ''; // Clear previous results
+    
+            if (searchValue) {
+                const filteredHospitals = hospitals.filter(hospital => hospital.name.toLowerCase().includes(searchValue));
+    
+                if (filteredHospitals.length > 0) {
+                    filteredHospitals.forEach(hospital => {
+                        const hospitalDiv = document.createElement('div');
+                        hospitalDiv.textContent = hospital.name;
+                        hospitalDiv.addEventListener('click', function() {
+                            hospitalSearchInput.value = hospital.name; // Set the clicked hospital name to the input field
+                            hospitalIdInput.value = hospital.hospital_id;       // Set the hospital ID in the hidden input
+                            hospitalResultsDiv.style.display = 'none'; // Hide the results
+                        });
+                        hospitalResultsDiv.appendChild(hospitalDiv);
+                    });
+                    hospitalResultsDiv.style.display = 'block'; // Show results if there are matches
+                } else {
+                    hospitalResultsDiv.style.display = 'none'; // Hide if no matches
+                }
+            } else {
+                hospitalResultsDiv.style.display = 'none'; // Hide results if input is empty
+            }
+        });
+    
+        // Optional: Handle form submission logic here (e.g., API request to update profile)
+        const profileForm = document.getElementById('profileUpdateForm');
+        profileForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            // Ensure hospitalId (hidden field) is sent to the backend on form submission
+            const selectedHospitalId = hospitalIdInput.value;
+            if (selectedHospitalId) {
+                console.log("Selected Hospital ID:", selectedHospitalId); // This will be submitted to the backend
+                // Logic to handle profile update submission, e.g., API call to update profile in the backend
+                alert("Profile updated successfully!");
+            } else {
+                alert("Please select a valid hospital.");
+            }
+        });
+    </script>
+    
+
+</body>
+</html>

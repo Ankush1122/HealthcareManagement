@@ -1,0 +1,82 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Record Details</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-900">
+  <div class="container mx-auto p-8">
+    <h1 class="text-3xl font-bold mb-6 text-center">Record Details</h1>
+
+    <!-- Record Details Section -->
+    <div id="recordDetails" class="bg-gray-200 p-6 rounded">
+      <h2 id="recordTitle" class="text-2xl font-semibold mb-4"></h2>
+      <div id="recordContent" class="space-y-4"></div>
+    </div>
+
+    <div class="mt-6 text-center">
+      <button class="bg-gray-700 text-white px-4 py-2 rounded" onclick="goBack()">Go Back</button>
+    </div>
+  </div>
+
+  <script>
+    // Simulated record data
+    const records = {
+      longTermRecord: [
+        { id: 1, patient_id: '123', diagnosis: 'Chronic Pain', test_results: 'Negative', notes: 'On painkillers' },
+        { id: 2, patient_id: '124', diagnosis: 'Diabetes', test_results: 'Positive', notes: 'Regular insulin therapy' }
+      ],
+      prescription: [
+        { id: 1, patient_id: '123', doctor_id: 'D001', diagnosis: 'Fever', observations: 'High temperature', notes: 'Paracetamol' },
+        { id: 2, patient_id: '124', doctor_id: 'D002', diagnosis: 'Hypertension', observations: 'High BP', notes: 'Amlodipine' }
+      ],
+      testReport: [
+        { id: 1, patient_id: '123', test_id: 'T001', observations: 'No abnormalities', date_conducted: '2023-08-10' },
+        { id: 2, patient_id: '124', test_id: 'T002', observations: 'High blood sugar', date_conducted: '2023-08-12' }
+      ]
+    };
+
+    function getRecordDetails(type, id) {
+      const record = records[type].find(r => r.id == id);
+      if (!record) {
+        document.getElementById('recordTitle').textContent = 'Record not found';
+        document.getElementById('recordContent').textContent = 'No details available.';
+        return;
+      }
+
+      let recordHtml = '';
+      for (const key in record) {
+        recordHtml += `<p><strong>${key.replace('_', ' ')}:</strong> ${record[key]}</p>`;
+      }
+
+      document.getElementById('recordTitle').textContent = `Viewing ${type.charAt(0).toUpperCase() + type.slice(1)} Record #${id}`;
+      document.getElementById('recordContent').innerHTML = recordHtml;
+    }
+
+    function goBack() {
+      window.history.back();
+    }
+
+    function getQueryParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        type: params.get('type'),
+        id: params.get('id')
+      };
+    }
+
+    // On page load, display record details based on URL parameters
+    document.addEventListener('DOMContentLoaded', () => {
+      const { type, id } = getQueryParams();
+      if (type && id) {
+        getRecordDetails(type, id);
+      }
+    });
+  </script>
+
+</body>
+
+</html>

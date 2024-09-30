@@ -1,0 +1,65 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Records - Healthcare Management System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-900">
+  <div class="container mx-auto p-8">
+    <h1 class="text-3xl font-bold mb-6 text-center">View Records</h1>
+
+    <!-- Tab Navigation -->
+    <div class="mb-6">
+      <nav class="flex justify-center space-x-4">
+        <button class="tab-button bg-gray-700 text-white px-4 py-2 rounded" onclick="switchTab('longTermRecordTab')">Long-Term Records</button>
+        <button class="tab-button bg-gray-700 text-white px-4 py-2 rounded" onclick="switchTab('prescriptionTab')">Prescriptions</button>
+        <button class="tab-button bg-gray-700 text-white px-4 py-2 rounded" onclick="switchTab('testReportTab')">Test Reports</button>
+      </nav>
+    </div>
+
+    <!-- Long-Term Records Tab -->
+    <div id="longTermRecordTab" class="tab-content">
+      <h2 class="text-2xl font-semibold mb-4">Long-Term Records</h2>
+      <ul class="space-y-2">
+        {% for record in long_term_records%}
+        <li class="bg-gray-200 p-4 rounded cursor-pointer" onclick="viewRecord('longTermRecord', {{forloop.counter}})">Long-Term Record #{{forloop.counter}}</li>
+        {% endfor %}
+        <!-- Add more records dynamically -->
+      </ul>
+    </div>
+
+    <!-- Prescription Tab -->
+    <div id="prescriptionTab" class="tab-content hidden">
+      <h2 class="text-2xl font-semibold mb-4">Prescriptions</h2>
+      <ul class="space-y-2">
+        {% for record in prescriptions%}
+        <li class="bg-gray-200 p-4 rounded cursor-pointer" onclick="viewRecord('prescription', {{forloop.counter}})">Prescription #{{forloop.counter}}</li>
+        {% endfor %}
+        <!-- Add more records dynamically -->
+      </ul>
+    </div>
+
+    <!-- Test Reports Tab -->
+    <div id="testReportTab" class="tab-content hidden">
+      <h2 class="text-2xl font-semibold mb-4">Test Reports</h2>
+      <ul class="space-y-2">
+        {% for record in test_reports%}
+        <li class="bg-gray-200 p-4 rounded cursor-pointer" onclick="redirectToTestReport({{ record.test_report_id }})">Test Report #{{forloop.counter}}</li>
+        {% endfor %}
+        <!-- Add more records dynamically -->
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    function redirectToTestReport(test_report_id) {
+        window.location.href = '/record/display_test/${test_report_id}/';
+    }
+  </script>
+
+</body>
+
+</html>

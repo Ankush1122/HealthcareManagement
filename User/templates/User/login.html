@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Management System - Login/Signup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .btn {
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #333333;
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+        .warning {
+            color: red;
+            font-weight: bold;
+        }
+        </style>
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+
+    <div class="w-full max-w-md bg-white p-8 shadow-lg rounded-md">
+        <!-- Tabs for Login/Signup -->
+        <div class="mb-6 flex justify-between">
+            <button id="loginTab" class="btn py-2 px-4 bg-gray-800 text-white w-1/2 rounded-l-md">Login</button>
+            <button id="signupTab" class="btn py-2 px-4 bg-gray-300 text-gray-800 w-1/2 rounded-r-md">Sign Up</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="space-y-6" method="POST" action="/user/login_signup/">
+            {% csrf_token %}
+            <input type="hidden" name="form_id" value="loginForm">
+            <div>
+                <label for="username" class="block text-gray-700">Username</label>
+                <input name="username" type="text" id="username" class="w-full border border-gray-300 p-2 rounded-md focus:ring focus:ring-gray-500 focus:border-gray-500" placeholder="Enter username" required>
+            </div>
+            <div>
+                <label for="password" class="block text-gray-700">Password</label>
+                <input name="password" type="password" id="password" class="w-full border border-gray-300 p-2 rounded-md focus:ring focus:ring-gray-500 focus:border-gray-500" placeholder="Enter password" required>
+            </div>
+
+            <p></p>
+            <p class="warning no-margin"> {{warning}}</p>
+            <p></p>
+
+            <p></p>
+            <p class="success no-margin"> {{success}}</p>
+            <p></p>
+
+            <button type="submit" class="btn w-full bg-gray-800 text-white py-2 rounded-md hover:bg-gray-900">Login</button>
+            <button class="btn w-full mt-2 py-2 bg-gray-300 text-gray-800 hover:bg-gray-400">
+                <i class="fab fa-google mr-2"></i> Login with Google
+            </button>
+        </form>
+
+        <!-- Signup Form (hidden by default) -->
+        <form id="signupForm" class="hidden space-y-6" method="POST" action="/user/login_signup/">
+            {% csrf_token %}
+            <input type="hidden" name="form_id" value="signupForm">
+
+            <div class="flex space-x-4">
+                <div class="w-1/2">
+                    <label for="firstName" class="block text-gray-700">First Name</label>
+                    <input type="text" name="firstName" id="firstName" class="w-full border border-gray-300 p-2 rounded-md focus:ring focus:ring-gray-500 focus:border-gray-500" placeholder="Enter first name" required>
+                </div>
+                <div class="w-1/2">
+                    <label for="lastName" class="block text-gray-700">Last Name</label>
+                    <input type="text" name="lastName" id="lastName" class="w-full border border-gray-300 p-2 rounded-md focus:ring focus:ring-gray-500 focus:border-gray-500" placeholder="Enter last name" required>
+                </div>
+            </div>
+            <div>
+                <label for="email" class="block text-gray-700">Email</label>
+                <input type="email" name="email" id="email" class="w-full border border-gray-300 p-2 rounded-md focus:ring focus:ring-gray-500 focus:border-gray-500" placeholder="Enter email" required>
+            </div>
+            <div>
+                <label for="signupUsername" class="block text-gray-700">Username</label>
+                <input type="text" name="signupUsername" id="signupUsername" class="w-full border border-gray-300 p-2 rounded-md focus:ring focus:ring-gray-500 focus:border-gray-500" placeholder="Choose a username" required>
+            </div>
+            <div>
+                <label for="role" class="block text-gray-700">Select Role</label>
+                <select id="role" name="role" class="w-full border border-gray-300 p-2 rounded-md focus:ring focus:ring-gray-500 focus:border-gray-500" required>
+                    <option value="" disabled selected>Select your role</option>
+                    <option value="Patient">Patient</option>
+                    <option value="Doctor">Doctor</option>
+                    <option value="Nurse">Nurse</option>
+                    <option value="Pharmacist">Pharmacist</option>
+                    <option value="Pathologist">Pathologist</option>
+                    <option value="Admin">Admin</option>
+                    <option value="InsuranceAgent">Insurance Agent</option>
+                    <option value="LawEnforcementAgent">Law Enforcement Agent</option>
+                    <option value="Hospital">Hospital</option>
+                </select>
+            </div>
+            <div>
+                <label for="signupPassword" class="block text-gray-700">Password</label>
+                <input name="signupPassword" type="password" id="signupPassword" class="w-full border border-gray-300 p-2 rounded-md focus:ring focus:ring-gray-500 focus:border-gray-500" placeholder="Create a password" required>
+            </div>
+            <div>
+                <label for="confirmPassword" class="block text-gray-700">Confirm Password</label>
+                <input name="confirmPassword" type="password" id="confirmPassword" class="w-full border border-gray-300 p-2 rounded-md focus:ring focus:ring-gray-500 focus:border-gray-500" placeholder="Confirm your password" required>
+            </div>
+            
+            <p></p>
+            <p class="warning no-margin"> {{warning}}</p>
+            <p></p>
+
+            <p></p>
+            <p class="success no-margin"> {{success}}</p>
+            <p></p>
+
+            <button type="submit" class="btn w-full bg-gray-800 text-white py-2 rounded-md hover:bg-gray-900">Sign Up</button>
+            <button class="btn w-full mt-2 py-2 bg-gray-300 text-gray-800 hover:bg-gray-400">
+                <i class="fab fa-google mr-2"></i> Sign Up with Google
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Switching between login and signup forms and clearing input fields
+        const loginTab = document.getElementById('loginTab');
+        const signupTab = document.getElementById('signupTab');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+
+        // Function to clear all form inputs
+        function clearInputs(form) {
+            const inputs = form.querySelectorAll('input');
+            inputs.forEach(input => input.value = '');
+            const select = form.querySelector('select');
+            if (select) select.selectedIndex = 0;
+        }
+
+        // Show login form and hide signup form (clears signup form)
+        loginTab.addEventListener('click', function() {
+            if (signupForm.classList.contains('hidden')) return; // Prevent unnecessary action
+            clearInputs(signupForm); // Clear signup form before switching
+            signupForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+            loginTab.classList.add('bg-gray-800', 'text-white');
+            signupTab.classList.remove('bg-gray-800', 'text-white');
+            signupTab.classList.add('bg-gray-300', 'text-gray-800');
+        });
+
+        // Show signup form and hide login form (clears login form)
+        signupTab.addEventListener('click', function() {
+            if (loginForm.classList.contains('hidden')) return; // Prevent unnecessary action
+            clearInputs(loginForm); // Clear login form before switching
+            loginForm.classList.add('hidden');
+            signupForm.classList.remove('hidden');
+            signupTab.classList.add('bg-gray-800', 'text-white');
+            loginTab.classList.remove('bg-gray-800', 'text-white');
+            loginTab.classList.add('bg-gray-300', 'text-gray-800');
+        });
+    </script>
+
+    <!-- Font Awesome Icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+
+</body>
+</html>

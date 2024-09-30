@@ -1,0 +1,208 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Healthcare Management System - Add Records</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-900">
+  <div class="container mx-auto p-8">
+    <h1 class="text-3xl font-bold mb-6 text-center">Healthcare Management System</h1>
+
+    <!-- Tab Navigation -->
+    <div class="mb-6">
+      <nav class="flex justify-center space-x-4">
+        <button class="tab-button bg-gray-700 text-white px-4 py-2 rounded" onclick="switchForm('longTermRecordForm')">Long-Term Record</button>
+        <button class="tab-button bg-gray-700 text-white px-4 py-2 rounded" onclick="switchForm('prescriptionForm')">Prescription</button>
+        <button class="tab-button bg-gray-700 text-white px-4 py-2 rounded" onclick="switchForm('testReportForm')">Test Report</button>
+      </nav>
+    </div>
+
+    <!-- Forms -->
+
+    <!-- LongTermRecord Form -->
+    <section id="longTermRecordForm" class="form-section space-y-4 bg-gray-200 p-6 rounded">
+      <h2 class="text-2xl font-semibold mb-4">Add Long-Term Record</h2>
+      <form>
+        <div>
+          <label class="block text-sm font-medium" for="patient_id">Patient ID</label>
+          <input class="w-full p-2 border rounded" type="text" id="patient_id" name="patient_id" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium" for="diagnosis">Diagnosis</label>
+          <input class="w-full p-2 border rounded" type="text" id="diagnosis" name="diagnosis" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium" for="test_results">Test Results</label>
+          <textarea class="w-full p-2 border rounded" id="test_results" name="test_results" rows="3"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium" for="notes">Notes</label>
+          <textarea class="w-full p-2 border rounded" id="notes" name="notes" rows="3"></textarea>
+        </div>
+        <div class="mt-8">
+          <button class="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-700" type="submit">Add Long-Term Record</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Prescription Form -->
+    <section id="prescriptionForm" class="form-section hidden space-y-4 bg-gray-200 p-6 rounded">
+      <h2 class="text-2xl font-semibold mb-4">Add Prescription</h2>
+      <form>
+        <div>
+          <label class="block text-sm font-medium" for="patient_id">Patient ID</label>
+          <input class="w-full p-2 border rounded" type="text" id="prescription_patient_id" name="patient_id" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium" for="doctor_id">Doctor ID</label>
+          <input class="w-full p-2 border rounded" type="text" id="doctor_id" name="doctor_id" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium" for="diagnosis">Diagnosis</label>
+          <input class="w-full p-2 border rounded" type="text" id="prescription_diagnosis" name="diagnosis" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium" for="observations">Observations</label>
+          <textarea class="w-full p-2 border rounded" id="observations" name="observations" rows="3"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium" for="notes">Notes</label>
+          <textarea class="w-full p-2 border rounded" id="prescription_notes" name="notes" rows="3"></textarea>
+        </div>
+
+        <!-- Prescription Medicines -->
+        <div>
+          <h3 class="text-lg font-medium mb-2">Prescription Medicines</h3>
+          <div id="medicineList" class="space-y-4">
+            <div class="medicine-group">
+              <div>
+                <label class="block text-sm font-medium" for="medicine_id">Medicine ID</label>
+                <input class="w-full p-2 border rounded" type="text" name="medicine_id[]" required>
+              </div>
+              <div>
+                <label class="block text-sm font-medium" for="quantity">Quantity</label>
+                <input class="w-full p-2 border rounded" type="text" name="quantity[]" required>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 flex space-x-4">
+            <button class="bg-gray-700 text-white px-4 py-2 rounded" type="button" onclick="addMedicine()">Add Another Medicine</button>
+            <button class="bg-gray-700 text-white px-4 py-2 rounded" type="button" onclick="removeMedicine()">Remove Last Medicine</button>
+          </div>
+        </div>
+
+        <!-- Test Prescriptions -->
+        <div class="mt-6">
+          <h3 class="text-lg font-medium mb-2">Test Prescriptions</h3>
+          <div id="testPrescriptionList" class="space-y-4">
+            <div class="test-group">
+              <div>
+                <label class="block text-sm font-medium" for="test_id">Test ID</label>
+                <input class="w-full p-2 border rounded" type="text" name="test_id[]" required>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 flex space-x-4">
+            <button class="bg-gray-700 text-white px-4 py-2 rounded" type="button" onclick="addTestPrescription()">Add Another Test</button>
+            <button class="bg-gray-700 text-white px-4 py-2 rounded" type="button" onclick="removeTestPrescription()">Remove Last Test</button>
+          </div>
+        </div>
+
+        <div class="mt-8">
+          <button class="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-700" type="submit">Add Prescription</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Test Report Form -->
+    <section id="testReportForm" class="form-section hidden space-y-4 bg-gray-200 p-6 rounded">
+      <h2 class="text-2xl font-semibold mb-4">Add Test Report</h2>
+      <form>
+        <div>
+          <label class="block text-sm font-medium" for="test_report_patient_id">Patient ID</label>
+          <input class="w-full p-2 border rounded" type="text" id="test_report_patient_id" name="patient_id" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium" for="pathologist_id">Pathologist ID</label>
+          <input class="w-full p-2 border rounded" type="text" id="pathologist_id" name="pathologist_id" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium" for="test_id">Test ID</label>
+          <input class="w-full p-2 border rounded" type="text" id="test_report_test_id" name="test_id" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium" for="test_report_observations">Observations</label>
+          <textarea class="w-full p-2 border rounded" id="test_report_observations" name="observations" rows="3"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium" for="test_report_doctor_id">Doctor ID (Who Prescribed)</label>
+          <input class="w-full p-2 border rounded" type="text" id="test_report_doctor_id" name="doctor_id" required>
+        </div>
+        <div class="mt-8">
+          <button class="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-700" type="submit">Add Test Report</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    function switchForm(formId) {
+      const forms = document.querySelectorAll('.form-section');
+      forms.forEach(form => {
+        if (form.id === formId) {
+          form.classList.remove('hidden');
+        } else {
+          form.classList.add('hidden');
+        }
+      });
+    }
+
+    function addMedicine() {
+      const medicineGroup = document.createElement('div');
+      medicineGroup.className = 'medicine-group mt-4';
+      medicineGroup.innerHTML = `
+        <div>
+          <label class="block text-sm font-medium" for="medicine_id">Medicine ID</label>
+          <input class="w-full p-2 border rounded" type="text" name="medicine_id[]" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium" for="quantity">Quantity</label>
+          <input class="w-full p-2 border rounded" type="text" name="quantity[]" required>
+        </div>
+      `;
+      document.getElementById('medicineList').appendChild(medicineGroup);
+    }
+
+    function removeMedicine() {
+      const medicineList = document.getElementById('medicineList');
+      if (medicineList.children.length > 1) {
+        medicineList.removeChild(medicineList.lastChild);
+      }
+    }
+
+    function addTestPrescription() {
+      const testGroup = document.createElement('div');
+      testGroup.className = 'test-group mt-4';
+      testGroup.innerHTML = `
+        <div>
+          <label class="block text-sm font-medium" for="test_id">Test ID</label>
+          <input class="w-full p-2 border rounded" type="text" name="test_id[]" required>
+        </div>
+      `;
+      document.getElementById('testPrescriptionList').appendChild(testGroup);
+    }
+
+    function removeTestPrescription() {
+      const testPrescriptionList = document.getElementById('testPrescriptionList');
+      if (testPrescriptionList.children.length > 1) {
+        testPrescriptionList.removeChild(testPrescriptionList.lastChild);
+      }
+    }
+  </script>
+
+</body>
+
+</html>
